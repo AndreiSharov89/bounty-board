@@ -4,4 +4,3 @@
 * extraz by chapters left unmerged
 ### Commits
 * History of commits should be kept in all branches
-* 
