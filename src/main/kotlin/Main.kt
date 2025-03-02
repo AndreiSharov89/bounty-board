@@ -18,6 +18,9 @@ fun main() {
     println(playerLevel)
 
     readBountyBoard()
+    performCombat()
+    performCombat("Ulrich")
+    performCombat("Hildr", true)
 }
 
 private fun obtainQuest(
@@ -45,4 +48,22 @@ private fun obtainQuest(
 private fun readBountyBoard(){
     println("The hero approaches bounty board. It reads:")
     println(obtainQuest(playerLevel))
+}
+
+fun shouldReturnAString():String{
+    TODO("implement the string building functionality here to return a string")
+    println("This is unrachable")
+}
+
+fun performCombat(){
+    println("You see nothing to fight")}
+fun performCombat(enemyName: String){
+    println("You begin fighting $enemyName")}
+fun performCombat(enemyName: String, isBlessed: Boolean){
+    val combatMessage = if (isBlessed) "You begin fighting with $enemyName. you are blessed with 2X damage!"
+    else "\"You begin fighting $enemyName\""
+    println(combatMessage)}
+
+fun `-vibe`(){
+    TODO("WH Beavis & BHead")
 }
