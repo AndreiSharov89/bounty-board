@@ -6,9 +6,8 @@ var playerLevel = 0
 fun main() {
     println("$HERO_NAME announces her presence to the world.")
     println("What level is $HERO_NAME?")
-    val playerLevelInput = readLine()!!
-    playerLevel = if (playerLevelInput.matches("""\d+""".toRegex())) {playerLevelInput.toInt()}
-                    else {1}
+    val playerLevelInput = readLine()!!.toInt()
+    playerLevel = playerLevelInput
     println("$HERO_NAME's level is $playerLevel.")
 
     readBountyBoard()
@@ -26,7 +25,11 @@ private fun obtainQuest(
     playerClass: String = "paladin",
     hasBefrendedBarbarians: Boolean = true,
     hasAngeredBarbarians: Boolean = false
-): String = when (playerLevel) {
+): String? {
+    if (playerLevel <= 0) {
+        throw InvalidPlayerLevelException()
+    }
+    return when (playerLevel) {
         1 -> "Meet Mr. Bubbles in the land of soft things."
         in 2..5 -> {
             val canTalkToBarbarians = !hasAngeredBarbarians && (hasBefrendedBarbarians || playerClass == "barbarian")
@@ -40,14 +43,24 @@ private fun obtainQuest(
         6 -> "Locate the enchanted sword."
         7 -> "Recover the long lost artifact of creation."
         8 -> "Defeat Nogartse, bringer of death and eater of the world."
-        else -> "There are no quests right now."
+        else -> null
     }
-
-private fun readBountyBoard(){
-    println(
-        """
-            |$HERO_NAME approaches bounty board. It reads:
-            |    ${obtainQuest(playerLevel).replace("[Nn]ogartse".toRegex(), "xxxxxxxx")}
-        """.trimMargin()
-    )
 }
+
+private fun readBountyBoard() {
+    val message = try {
+        val quest: String? = obtainQuest(playerLevel)
+        quest?.replace("[Nn]ogartse".toRegex(), "xxxxxxxx")
+            ?.let { censoredQuest ->
+                """
+            |$HERO_NAME approaches the bounty board. It reads:
+            |    "$censoredQuest"
+        """.trimMargin()
+            }
+    } catch (e: Exception) {
+        "$HERO_NAME approaches the bounty board, but it is blank."
+    }
+    println(message)
+}
+
+class InvalidPlayerLevelException() : IllegalArgumentException("Invalid player level (must be at least 1).")
